@@ -1,0 +1,27 @@
+{
+  "name": "lingerie-backend",
+  "version": "1.0.0",
+  "description": "backen of lingerie app",
+  "author": "thek1ng237",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "build": "echo \"Error: no build specified\" && exit 1",
+    "dev:db": "prisma migrate dev --name init",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "prisma studio sync || exit 0"
+  },
+  
+  "dependencies": {
+    "@prisma/client": "^5.21.0",
+    "express": "^5.2.1",
+    "nodemon": "^3.1.14"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^22.20.2",
+    "prisma": "^5.21.0",
+    "typescript": "^7.0.2"
+  }
+}

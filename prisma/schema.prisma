@@ -1,0 +1,115 @@
+
+//schema prima
+
+datasource db{
+
+    provider="postgresql"
+    url=env("DATABASE_URL")
+}
+
+generator client{
+
+provider="prisma-client-js"
+}
+
+enum Role{
+    admin
+    user
+}
+enum Type{
+    chaussette
+    dessous
+}
+
+enum Status{
+    pending
+    paid
+    delivered
+}
+model User{
+    id         String @id @default(uuid())
+    email      String @unique
+    password   String
+    firstName  String
+    lastName   String
+    role       Role    @default(user)
+    adresse    String
+    phone      String
+    createdAt DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+
+    order       Order[]
+}
+
+model Order{
+    id            String @id @default(uuid())
+    status        Status @default(pending)
+    totalPrice    Float 
+    dateOrder      DateTime @default(now())
+
+    idUser        String
+    user          User   @relation(fields:[idUser] , references : [id])
+    
+    orderDetails   OrderDetails[]
+    
+}
+
+model Product{
+    id           String @id @default(uuid())
+    title        String
+    description  String
+    price        Float
+    image        String
+    type         Type
+
+    variante     Variante[]
+
+    brandId      String
+    brand        Brand  @relation(fields:[brandId], references:[id])
+}
+
+model Brand{
+    id          String @id @default(uuid())
+    name        String
+    description String
+
+    product Product[]
+}
+
+model OrderDetails{
+    id          String @id @default(uuid())
+    quantity    Int 
+    price       Float
+
+    orderId      String
+    order        Order   @relation(fields:[orderId],references:[id])
+
+    varianteId  String
+    variante    Variante   @relation(fields:[varianteId], references:[id])
+}
+
+model Variante{
+    id           String  @id  @default(uuid())
+    stock        Int
+    price        Float
+
+    orderDetails  OrderDetails[]
+    productId    String
+    product      Product  @relation(fields:[productId], references:[id])
+    idSize       String  
+    size Size    @relation(fields:[idSize],references:[id])
+    idColor      String 
+    color Color  @relation(fields:[idColor],references:[id])
+}
+
+model Color{
+    id       String @id @default(uuid())
+    code     String
+    variante Variante[]
+}
+
+model Size{
+    id       String @id @default(uuid())
+    label    String
+    variante Variante[]
+}
