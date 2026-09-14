@@ -6,13 +6,13 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.js",
-    "build": "echo \"Error: no build specified\" && exit 1",
+    "dev": "tsx watch  src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
     "dev:db": "prisma migrate dev --name init",
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "prisma studio sync || exit 0"
   },
-  
   "dependencies": {
     "@prisma/client": "^5.21.0",
     "express": "^5.2.1",
@@ -22,6 +22,7 @@
     "@types/express": "^5.0.6",
     "@types/node": "^22.20.2",
     "prisma": "^5.21.0",
+    "tsx": "^4.23.13",
     "typescript": "^7.0.2"
   }
 }
