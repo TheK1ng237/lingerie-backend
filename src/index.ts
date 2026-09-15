@@ -1,4 +1,5 @@
 import express from "express";
+import { connectDB, disconnectDB } from "./config/database.js";
 
 const app=express();
 
@@ -7,5 +8,6 @@ app.get("/",(req,res)=>{
 })
 
 app.listen(4000,()=>{
+    
     console.log("server is running on port ",process.env.PORT || 4000);
 })

@@ -92,7 +92,7 @@ model Variante{
     id           String  @id  @default(uuid())
     stock        Int
     price        Float
-
+    image        String
     orderDetails  OrderDetails[]
     productId    String
     product      Product  @relation(fields:[productId], references:[id])
