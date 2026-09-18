@@ -6,22 +6,22 @@ export interface varianteResponseDto {
     price: number;
     image: string;
     size: {
-        id: string;
+        id: number;
         label: string;
     };
     color: {
-        id: string;
+        id: number;
         code: string;
     };
 }
 
-export interface productResponceDto{
+export interface productResponseDto{
     id:number;
     name:string;
     description:string;
     price:number;
     image:string;
-    createdAt: Date;
+    createdAt:Date;
     type: Type;
     variante: varianteResponseDto[];
 

@@ -1,10 +1,21 @@
 import { Product,Prisma } from "@prisma/client";
 
+export type ProductWithVariants = Prisma.ProductGetPayload<{
+    include: {
+        variante: {
+            include: {
+                size: true;
+                color: true;
+            };
+        };
+    };
+}>;
 
 export interface IProductRepository {
     create(data:Prisma.ProductCreateInput):Promise<Product>;
-    findById(id:number):Promise<Product |null>;
-    findAll():Promise<Product[]>;
-    updateById(id:number,data:Prisma.ProductUpdateInput):Promise<Product>;
-    delete(id:number):Promise<Product>;
+    findById(id:number):Promise<ProductWithVariants | null>;
+    findAll():Promise<ProductWithVariants[]>;
+    findByName(name:string):Promise<Product | null>;
+    updateById(id:number,data:Prisma.ProductUpdateInput):Promise<ProductWithVariants>;
+    delete(id:number):Promise<void>;
 }

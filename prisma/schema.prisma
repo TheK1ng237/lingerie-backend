@@ -67,12 +67,12 @@ model Order{
 
 model Product{
     id           Int @id @default(autoincrement())
-    title        String
+    name         String
     description  String
     price        Float
     image        String
     type         Type
-
+    createdAt    DateTime @default(now())
     variante     Variante[]
 
     brandId      Int
