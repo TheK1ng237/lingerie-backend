@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import env from "./env.js";
 
 class Database {
 
@@ -10,7 +11,7 @@ class Database {
         if (!Database.instance) {
 
             Database.instance = new PrismaClient({
-                log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn', 'info'] : ['error']
+                log: env.NODE_ENV === 'development' ? ['query', 'error', 'warn', 'info'] : ['error']
             })
         }
         return Database.instance
