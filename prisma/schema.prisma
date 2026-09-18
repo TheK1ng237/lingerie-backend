@@ -27,18 +27,31 @@ enum Status{
     delivered
 }
 model User{
-    id         Int @id @default(autoincrement())
-    email      String @unique
-    password   String
-    firstName  String
-    lastName   String
-    role       Role    @default(user)
-    adresse    String
-    phone      String
-    createdAt  DateTime @default(now())
-    updatedAt  DateTime @updatedAt
+    id           Int @id @default(autoincrement())
+    email        String @unique
+    password     String
+    firstName    String
+    lastName     String
+    role         Role    @default(user)
+    adresse      String
+    phone        Int
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @updatedAt
 
-    order       Order[]
+    order        Order[]
+    refreshtoken RefreshToken[]
+}
+
+model RefreshToken{
+    id        Int @id @default(autoincrement())
+    token     String @unique
+    revoke    Boolean
+    createdAt DateTime @default(now())
+    expireAt  DateTime
+
+    idUser Int
+
+    user User  @relation(fields:[idUser],references:[id])
 }
 
 model Order{

@@ -5,7 +5,7 @@ export interface UserResponceDto{
     id:number;
     email:string;
     firstName:string;
-    lastname:string;
+    lastName:string;
     role:Role;
     adresse:string;
     phone:number;
