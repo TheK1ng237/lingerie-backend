@@ -3,7 +3,8 @@ import { Product,Prisma } from "@prisma/client";
 
 export interface IProductRepository {
     create(data:Prisma.ProductCreateInput):Promise<Product>;
-    findById(id:string):Promise<Product |null>;
+    findById(id:number):Promise<Product |null>;
     findAll():Promise<Product[]>;
-    delete(id:string):Promise<void>;
+    updateById(id:number,data:Prisma.ProductUpdateInput):Promise<Product>;
+    delete(id:number):Promise<Product>;
 }

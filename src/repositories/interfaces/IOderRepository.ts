@@ -2,7 +2,8 @@ import { Order,Prisma } from "@prisma/client";
 
 export interface IOrderRepository {
     create(data:Prisma.OrderCreateInput):Promise<Order>;
-    findById(id:string):Promise<Order |null>;
+    findById(id:number):Promise<Order |null>;
     findAll():Promise<Order[]>;
-    delete(id:string):Promise<void>;
+    updateById(id:number,data:Prisma.OrderUpdateInput):Promise<Order>;
+    delete(id:number):Promise<void>;
 }

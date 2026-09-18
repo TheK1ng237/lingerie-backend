@@ -9,7 +9,10 @@
     "dev": "tsx watch  src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "dev:db": "prisma migrate dev --name init",
+    "db:migrate": "prisma migrate dev",
+    "db:generate": "prisma generate",
+    "db:studio": "prisma studio",
+    "db:push": "prisma db push",
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "prisma studio sync || exit 0"
   },

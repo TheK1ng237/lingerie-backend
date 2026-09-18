@@ -17,7 +17,7 @@ class Database {
     }
 }
 
-const prisma = Database.getInstance()
+export const prisma = Database.getInstance()
 
 export async function connectDB(): Promise<void> {
 

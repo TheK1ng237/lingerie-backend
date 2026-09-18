@@ -2,7 +2,7 @@ import { Role } from "@prisma/client";
 
 
 export interface UserResponceDto{
-    id:string;
+    id:number;
     email:string;
     firstName:string;
     lastname:string;

@@ -9,7 +9,7 @@ CREATE TYPE "Status" AS ENUM ('pending', 'paid', 'delivered');
 
 -- CreateTable
 CREATE TABLE "User" (
-    "id" TEXT NOT NULL,
+    "id" SERIAL NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "firstName" TEXT NOT NULL,
@@ -25,31 +25,31 @@ CREATE TABLE "User" (
 
 -- CreateTable
 CREATE TABLE "Order" (
-    "id" TEXT NOT NULL,
+    "id" SERIAL NOT NULL,
     "status" "Status" NOT NULL DEFAULT 'pending',
     "totalPrice" DOUBLE PRECISION NOT NULL,
     "dateOrder" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "idUser" TEXT NOT NULL,
+    "idUser" INTEGER NOT NULL,
 
     CONSTRAINT "Order_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Product" (
-    "id" TEXT NOT NULL,
+    "id" SERIAL NOT NULL,
     "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "price" DOUBLE PRECISION NOT NULL,
     "image" TEXT NOT NULL,
     "type" "Type" NOT NULL,
-    "brandId" TEXT NOT NULL,
+    "brandId" INTEGER NOT NULL,
 
     CONSTRAINT "Product_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Brand" (
-    "id" TEXT NOT NULL,
+    "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
 
@@ -58,30 +58,31 @@ CREATE TABLE "Brand" (
 
 -- CreateTable
 CREATE TABLE "OrderDetails" (
-    "id" TEXT NOT NULL,
+    "id" SERIAL NOT NULL,
     "quantity" INTEGER NOT NULL,
     "price" DOUBLE PRECISION NOT NULL,
-    "orderId" TEXT NOT NULL,
-    "varianteId" TEXT NOT NULL,
+    "orderId" INTEGER NOT NULL,
+    "varianteId" INTEGER NOT NULL,
 
     CONSTRAINT "OrderDetails_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Variante" (
-    "id" TEXT NOT NULL,
+    "id" SERIAL NOT NULL,
     "stock" INTEGER NOT NULL,
     "price" DOUBLE PRECISION NOT NULL,
-    "productId" TEXT NOT NULL,
-    "idSize" TEXT NOT NULL,
-    "idColor" TEXT NOT NULL,
+    "image" TEXT NOT NULL,
+    "productId" INTEGER NOT NULL,
+    "idSize" INTEGER NOT NULL,
+    "idColor" INTEGER NOT NULL,
 
     CONSTRAINT "Variante_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Color" (
-    "id" TEXT NOT NULL,
+    "id" SERIAL NOT NULL,
     "code" TEXT NOT NULL,
 
     CONSTRAINT "Color_pkey" PRIMARY KEY ("id")
@@ -89,7 +90,7 @@ CREATE TABLE "Color" (
 
 -- CreateTable
 CREATE TABLE "Size" (
-    "id" TEXT NOT NULL,
+    "id" SERIAL NOT NULL,
     "label" TEXT NOT NULL,
 
     CONSTRAINT "Size_pkey" PRIMARY KEY ("id")

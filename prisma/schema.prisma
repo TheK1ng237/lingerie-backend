@@ -27,7 +27,7 @@ enum Status{
     delivered
 }
 model User{
-    id         String @id @default(uuid())
+    id         Int @id @default(autoincrement())
     email      String @unique
     password   String
     firstName  String
@@ -35,27 +35,25 @@ model User{
     role       Role    @default(user)
     adresse    String
     phone      String
-    createdAt DateTime @default(now())
+    createdAt  DateTime @default(now())
     updatedAt  DateTime @updatedAt
 
     order       Order[]
 }
 
 model Order{
-    id            String @id @default(uuid())
+    id            Int @id @default(autoincrement())
     status        Status @default(pending)
     totalPrice    Float 
-    dateOrder      DateTime @default(now())
-
-    idUser        String
+    dateOrder     DateTime @default(now())
+    idUser        Int
     user          User   @relation(fields:[idUser] , references : [id])
-    
-    orderDetails   OrderDetails[]
+    orderDetails  OrderDetails[]
     
 }
 
 model Product{
-    id           String @id @default(uuid())
+    id           Int @id @default(autoincrement())
     title        String
     description  String
     price        Float
@@ -64,12 +62,12 @@ model Product{
 
     variante     Variante[]
 
-    brandId      String
+    brandId      Int
     brand        Brand  @relation(fields:[brandId], references:[id])
 }
 
 model Brand{
-    id          String @id @default(uuid())
+    id          Int @id @default(autoincrement())
     name        String
     description String
 
@@ -77,39 +75,39 @@ model Brand{
 }
 
 model OrderDetails{
-    id          String @id @default(uuid())
+    id          Int @id @default(autoincrement())
     quantity    Int 
     price       Float
 
-    orderId      String
+    orderId      Int
     order        Order   @relation(fields:[orderId],references:[id])
 
-    varianteId  String
+    varianteId  Int
     variante    Variante   @relation(fields:[varianteId], references:[id])
 }
 
 model Variante{
-    id           String  @id  @default(uuid())
+    id           Int  @id  @default(autoincrement())
     stock        Int
     price        Float
     image        String
     orderDetails  OrderDetails[]
-    productId    String
+    productId    Int
     product      Product  @relation(fields:[productId], references:[id])
-    idSize       String  
+    idSize       Int  
     size Size    @relation(fields:[idSize],references:[id])
-    idColor      String 
-    color Color  @relation(fields:[idColor],references:[id])
+    idColor      Int 
+    color        Color  @relation(fields:[idColor],references:[id])
 }
 
 model Color{
-    id       String @id @default(uuid())
+    id       Int @id @default(autoincrement())
     code     String
     variante Variante[]
 }
 
 model Size{
-    id       String @id @default(uuid())
+    id       Int @id @default(autoincrement())
     label    String
     variante Variante[]
 }

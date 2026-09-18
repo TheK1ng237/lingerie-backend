@@ -1,7 +1,7 @@
 import { Type } from "@prisma/client";
 
 export interface varianteResponseDto {
-    id: string;
+    id: number;
     stock: number;
     price: number;
     image: string;
@@ -16,7 +16,7 @@ export interface varianteResponseDto {
 }
 
 export interface productResponceDto{
-    id:string;
+    id:number;
     name:string;
     description:string;
     price:number;
