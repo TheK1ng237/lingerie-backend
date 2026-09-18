@@ -3,6 +3,7 @@ import userRepository from "../repositories/User.repository.js";
 import { IUserRepository } from "../repositories/interfaces/IUserRepository.js";
 import { AppError } from "../utils/AppError.js";
 import { UserResponceDto } from "../types/user.dto.js";
+import { hashpassword } from "../utils/password.js";
 
 
 export class UserService {
@@ -16,7 +17,8 @@ export class UserService {
             throw new AppError("User with this email already exists.",409);
         }
 
-        const newUser = await this.userRepo.create(data);
+        const hashed = await hashpassword(data.password)
+        const newUser = await this.userRepo.create({...data, password:hashed});
         const {password,...userDTO} = newUser;
         return userDTO;
     }
