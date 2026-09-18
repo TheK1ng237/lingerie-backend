@@ -11,3 +11,9 @@ export interface UserResponceDto{
     phone:number;
     createdAt: Date;
 }
+
+export interface AuthTokenDto{
+    accesToken:string;
+    refreshToken:string;
+    expireIn:string;
+}
