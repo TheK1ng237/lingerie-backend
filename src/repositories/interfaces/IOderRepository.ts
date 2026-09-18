@@ -1,9 +1,16 @@
 import { Order,Prisma } from "@prisma/client";
 
+export type OrderWithDetails = Prisma.OrderGetPayload<{
+    include: {
+        orderDetails: true;
+    };
+}>;
+
 export interface IOrderRepository {
-    create(data:Prisma.OrderCreateInput):Promise<Order>;
-    findById(id:number):Promise<Order |null>;
-    findAll():Promise<Order[]>;
-    updateById(id:number,data:Prisma.OrderUpdateInput):Promise<Order>;
+    create(data:Prisma.OrderCreateInput):Promise<OrderWithDetails>;
+    findById(id:number):Promise<OrderWithDetails |null>;
+    findByUserId(idUser:number):Promise<OrderWithDetails[]>;
+    findAll():Promise<OrderWithDetails[]>;
+    updateById(id:number,data:Prisma.OrderUpdateInput):Promise<OrderWithDetails>;
     delete(id:number):Promise<void>;
 }
