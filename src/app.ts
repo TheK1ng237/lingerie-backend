@@ -1,0 +1,45 @@
+import express, { Application } from 'express';
+import compression from 'compression';
+import hpp from 'hpp';
+import pinoHttp from 'pino-http';
+import swaggerUi from 'swagger-ui-express';
+ 
+import  env  from './config/env.js';
+import { logger } from './config/logger.js';
+import { swaggerSpec } from './config/swagger.js';
+import { securityHeaders } from './middlewares/security.middleware.js';
+import { corsMiddleware } from './middlewares/cors.middleware.js';
+import { globalLimiter } from './middlewares/rateLimiter.middleware.js';
+import { errorHandler } from './middlewares/error.middleware.js';
+import { notFound } from './middlewares/notFound.middleware.js';
+import userRoutes from './routes/user.routes.js';
+import authRoutes from './routes/auth.routes.js';
+ 
+const app: Application = express();
+ 
+app.set('trust proxy', 1);
+ 
+// Sécurité et hygiène HTTP — dans cet ordre, avant tout le reste.
+app.use(securityHeaders);
+app.use(corsMiddleware);
+app.use(compression());
+app.use(hpp());
+app.use(express.json({ limit: '10kb' }));
+app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+app.use(pinoHttp({ logger }));
+app.use(globalLimiter);
+ 
+// Documentation Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+ 
+// Supervision
+app.get('/health', (_req, res) => res.status(200).json({ status: 'ok' }));
+ 
+// Routes métier, préfixées et versionnées
+app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/users', userRoutes);
+ 
+app.use(notFound);
+app.use(errorHandler);
+ 
+export default app;
