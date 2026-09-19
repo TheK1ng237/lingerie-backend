@@ -1,7 +1,7 @@
 import helmet from "helmet";
 
 
-export const securityHeader= helmet({
+export const securityHeaders= helmet({
     contentSecurityPolicy:{
         directives:{
             defaultSrc:["'self'"],
