@@ -13,7 +13,7 @@ export interface UserResponceDto{
 }
 
 export interface AuthTokenDto{
-    accesToken:string;
+    accessToken:string;
     refreshToken:string;
     expireIn:string;
 }
