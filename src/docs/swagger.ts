@@ -61,7 +61,7 @@ const options: swaggerJSDoc.Options = {
                     type: "object", required: ["name", "description", "price", "image", "type", "brandId"],
                     properties: {
                         name: { type: "string" }, description: { type: "string" }, price: { type: "number" },
-                        image: { type: "string" }, type: { type: "string", enum: ["chaussette", "dessous"] }, brandId: { type: "integer" },
+                        image: { type: "string", format: "binary" }, type: { type: "string", enum: ["chaussette", "dessous"] }, brandId: { type: "integer" },
                     },
                 },
                 Variant: {
@@ -74,7 +74,7 @@ const options: swaggerJSDoc.Options = {
                 },
                 VariantInput: {
                     type: "object", required: ["stock", "price", "image", "idSize", "idColor"],
-                    properties: { stock: { type: "integer" }, price: { type: "number" }, image: { type: "string" }, idSize: { type: "integer" }, idColor: { type: "integer" } },
+                    properties: { stock: { type: "integer" }, price: { type: "number" }, image: { type: "string", format: "binary" }, idSize: { type: "integer" }, idColor: { type: "integer" } },
                 },
                 OrderDetailInput: {
                     type: "object", required: ["quantity", "price", "varianteId"],

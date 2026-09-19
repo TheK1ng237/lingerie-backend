@@ -5,6 +5,7 @@ import * as productController from "../controllers/product.controller.js";
 import { validate } from "../middlewares/validate.middleware.js";
 import { idParamSchema, productIdParamSchema } from "../validators/common.validator.js";
 import { createProductSchema, createVariantSchema, updateProductSchema, updateVariantSchema } from "../validators/product.validator.js";
+import { uploadProductImage, uploadVariantImage } from "../middlewares/image-upload.middleware.js";
 
 const router = Router();
 /**
@@ -63,12 +64,12 @@ router.use(protect, authorize("admin"));
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema: { $ref: '#/components/schemas/ProductInput' }
  *     responses:
  *       201: { description: Produit créé }
  */
-router.post("/", validate(createProductSchema), asyncHandler(productController.createProduct));
+router.post("/", uploadProductImage, validate(createProductSchema), asyncHandler(productController.createProduct));
 
 /**
  * @openapi
@@ -84,12 +85,12 @@ router.post("/", validate(createProductSchema), asyncHandler(productController.c
  *         schema: { type: integer }
  *     requestBody:
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema: { $ref: '#/components/schemas/ProductInput' }
  *     responses:
  *       200: { description: Produit modifié }
  */
-router.patch("/:id", validate(updateProductSchema), asyncHandler(productController.updateProduct));
+router.patch("/:id", uploadProductImage, validate(updateProductSchema), asyncHandler(productController.updateProduct));
 
 /**
  * @openapi
@@ -123,12 +124,12 @@ router.delete("/:id", validate(idParamSchema), asyncHandler(productController.de
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema: { $ref: '#/components/schemas/VariantInput' }
  *     responses:
  *       201: { description: Variante créée }
  */
-router.post("/:productId/variants", validate(createVariantSchema), asyncHandler(productController.createVariant));
+router.post("/:productId/variants", uploadVariantImage, validate(createVariantSchema), asyncHandler(productController.createVariant));
 
 /**
  * @openapi
@@ -144,12 +145,12 @@ router.post("/:productId/variants", validate(createVariantSchema), asyncHandler(
  *         schema: { type: integer }
  *     requestBody:
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema: { $ref: '#/components/schemas/VariantInput' }
  *     responses:
  *       200: { description: Variante modifiée }
  */
-router.patch("/variants/:id", validate(updateVariantSchema), asyncHandler(productController.updateVariant));
+router.patch("/variants/:id", uploadVariantImage, validate(updateVariantSchema), asyncHandler(productController.updateVariant));
 
 /**
  * @openapi

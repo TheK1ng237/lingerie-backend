@@ -13,6 +13,9 @@ const envScema = z.object({
     JWT_ACCESS_EXPIRATION_MINUTES: z.coerce.number().default(15),
     JWT_REFRESH_EXPIRATION_DAYS: z.coerce.number().default(7),
     CORS_ORIGIN: z.string().default(""),
+    SUPABASE_URL: z.string().url().optional(),
+    SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
+    SUPABASE_STORAGE_BUCKET: z.string().min(1).default("product-images"),
     RATE_LIMIT_WINDOW_MS: z.coerce.number().default(15 * 60 * 1000),
     RATE_LIMIT_MAX: z.coerce.number().default(100),
     
