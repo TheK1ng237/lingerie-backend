@@ -20,7 +20,7 @@ export function protect(req:Request,res:Response, next:NextFunction):void{
     }
 
     try{
-        const token= header.split('')[1];
+        const token= header.split(' ')[1];
 
         const payload = tokenService.verifyAccessToken(token)
 
