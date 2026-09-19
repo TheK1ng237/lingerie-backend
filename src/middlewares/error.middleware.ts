@@ -11,9 +11,9 @@ export const errorHandler =(
     next:NextFunction,
 ):void =>{
 
-    const statusCode= error instanceof AppError ? error.statuscode : 500;
+    const statusCode = error instanceof AppError ? error.statuscode : 500;
 
-    const message = statusCode === 500 ? "internal server error" : error.message;
+    const message = error instanceof AppError ? error.message : (statusCode === 500 ? "internal server error" : error.message);
 
     if(statusCode==500){
         logger.error({error},'Error not generated')

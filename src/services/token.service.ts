@@ -15,7 +15,7 @@ export class TokenService {
     generateAccessToken(paylooad: jwtPayload): string {
         return jwt.sign(paylooad, env.JWT_ACCESS_SECRET, {
             algorithm: 'HS256',
-            expiresIn: env.JWT_ACCESS_EXPIRATION_MINUTES
+            expiresIn: `${env.JWT_ACCESS_EXPIRATION_MINUTES}m`
         })
     }
 
@@ -25,17 +25,18 @@ export class TokenService {
                 algorithms: ['HS256']
             });
 
-            if (
-                typeof decoded === "string" ||
-                typeof decoded.sub !== "number" ||
-                typeof decoded.role !== "string"
-            ) {
+            if (typeof decoded === "string" || !decoded.sub || !decoded.role) {
                 throw new AppError("invalid access token", 401);
             }
 
+            const subNumber = Number(decoded.sub);
+            if (isNaN(subNumber)) {
+                throw new AppError("invalid access token payload", 401);
+            }
+
             return {
-                sub: decoded.sub,
-                role: decoded.role
+                sub: subNumber,
+                role: String(decoded.role)
             };
         } catch (error) {
             if (error instanceof AppError) {

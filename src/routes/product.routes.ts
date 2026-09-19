@@ -51,7 +51,13 @@ router.get("/:id", validate(idParamSchema), asyncHandler(productController.getPr
  *     responses:
  *       200: { description: Variante trouvée }
  */
-router.get("/variants/:id", validate(idParamSchema), asyncHandler(productController.getVariant));
+import * as likeController from "../controllers/like.controller.js";
+
+router.post("/likes/mine", protect, asyncHandler(likeController.getMyLikes));
+router.get("/likes/mine", protect, asyncHandler(likeController.getMyLikes));
+router.post("/:id/like", protect, validate(idParamSchema), asyncHandler(likeController.toggleLike));
+router.get("/:id/likes", validate(idParamSchema), asyncHandler(likeController.getProductLikesCount));
+
 router.use(protect, authorize("admin"));
 
 /**

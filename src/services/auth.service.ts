@@ -20,7 +20,7 @@ export class AuthService{
     
 
         if( !user || !(await comparePassword(password,user.password)) ){
-            throw new AppError("incorrect email or password")
+            throw new AppError("Email ou mot de passe incorrect", 401)
         }
 
         const accessToken = this.token.generateAccessToken({
