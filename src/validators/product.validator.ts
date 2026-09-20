@@ -1,20 +1,22 @@
 import { z } from "zod";
+import { Category, Type } from "@prisma/client";
 
 const productFields = {
     name: z.string().min(1),
     description: z.string().min(1),
     price: z.coerce.number().nonnegative(),
-    image: z.string().min(1),
-    type: z.enum(["chaussette", "dessous"]),
+    image: z.string().min(1).optional(),
+    category: z.nativeEnum(Category),
+    type: z.nativeEnum(Type),
 };
 
 export const createProductSchema = z.object({
-    body: z.object({ ...productFields, brandId: z.coerce.number().int().positive() }),
+    body: z.object({ ...productFields, brandId: z.coerce.number().int().positive().optional().default(1) }),
 });
 
 export const updateProductSchema = z.object({
     params: z.object({ id: z.coerce.number().int().positive() }),
-    body: z.object({ ...productFields, brandId: z.coerce.number().int().positive() }).partial().strict(),
+    body: z.object({ ...productFields, brandId: z.coerce.number().int().positive() }).partial(),
 });
 
 export const createVariantSchema = z.object({

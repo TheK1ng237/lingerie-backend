@@ -1,4 +1,4 @@
-import { Type } from "@prisma/client";
+import { Category, Type } from "@prisma/client";
 
 export interface varianteResponseDto {
     id: number;
@@ -15,14 +15,14 @@ export interface varianteResponseDto {
     };
 }
 
-export interface productResponseDto{
-    id:number;
-    name:string;
-    description:string;
-    price:number;
-    image:string;
-    createdAt:Date;
-    type: Type;
+export interface productResponseDto {
+    id: number;
+    name: string;
+    description: string;
+    price: number;
+    image: string;
+    createdAt: Date;
+    type: Type | string;
+    category: Category | string;
     variante: varianteResponseDto[];
-
 }

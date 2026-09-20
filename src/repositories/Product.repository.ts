@@ -6,10 +6,20 @@ import { IProductRepository, ProductWithVariants } from "./interfaces/iProductRe
 export class ProductRepository implements IProductRepository {
 
     async create(data:Prisma.ProductCreateInput):Promise<Product>{
-        const product= await prisma.product.create({
-            data:data
-        })
-        return product
+        try {
+            const product = await prisma.product.create({
+                data: data
+            })
+            return product
+        } catch (err: any) {
+            if (err?.code === "P2002" && Array.isArray(err?.meta?.target) && err?.meta?.target.includes("id")) {
+                await prisma.$executeRawUnsafe(`SELECT setval(pg_get_serial_sequence('"Product"', 'id'), coalesce(max(id), 1)) FROM "Product";`);
+                return prisma.product.create({
+                    data: data
+                });
+            }
+            throw err;
+        }
     }
 
     async findById(id:number):Promise<ProductWithVariants |null>{
@@ -18,6 +28,7 @@ export class ProductRepository implements IProductRepository {
                 id:id
             },
             include:{
+                brand: true,
                 variante:{
                     include:{
                         size:true,
@@ -40,6 +51,7 @@ export class ProductRepository implements IProductRepository {
     async findAll():Promise<ProductWithVariants[]>{
         const products= await prisma.product.findMany({
             include:{
+                brand: true,
                 variante:{
                     include:{
                         size:true,
@@ -58,6 +70,7 @@ export class ProductRepository implements IProductRepository {
             },
             data:data,
             include:{
+                brand: true,
                 variante:{
                     include:{
                         size:true,

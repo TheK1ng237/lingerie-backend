@@ -14,6 +14,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+
 # Build and coverage output
 dist/
 build/
@@ -30,3 +31,5 @@ uploads/
 .idea/
 .DS_Store
 Thumbs.db
+
+seed.ts

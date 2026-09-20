@@ -16,9 +16,29 @@ enum Role{
     admin
     user
 }
-enum Type{
+
+enum Category {
+    femme
+    homme
+    enfant
+}
+
+enum Type {
+    ensemble
+    body
+    soutien_gorge
+    pyjama
+    corset
+    culotte
+    robe
+    combinaison
+    shorty
+    boxer
+    maillot
+    slip
+    calecon
     chaussette
-    dessous
+    gigoteuse
 }
 
 enum Status{
@@ -73,6 +93,7 @@ model Product{
     price        Float
     image        String
     type         Type
+    category     Category
     createdAt    DateTime @default(now())
     variante     Variante[]
 

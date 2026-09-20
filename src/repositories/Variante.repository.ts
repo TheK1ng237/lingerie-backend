@@ -14,10 +14,21 @@ export class VarianteRepository implements IVarianteRepository {
     async create(
         data: Prisma.VarianteUncheckedCreateInput
     ): Promise<VarianteWithRelations> {
-        return prisma.variante.create({
-            data,
-            include: varianteInclude
-        });
+        try {
+            return await prisma.variante.create({
+                data,
+                include: varianteInclude
+            });
+        } catch (err: any) {
+            if (err?.code === "P2002" && Array.isArray(err?.meta?.target) && err?.meta?.target.includes("id")) {
+                await prisma.$executeRawUnsafe(`SELECT setval(pg_get_serial_sequence('"Variante"', 'id'), coalesce(max(id), 1)) FROM "Variante";`);
+                return prisma.variante.create({
+                    data,
+                    include: varianteInclude
+                });
+            }
+            throw err;
+        }
     }
 
     async findById(id: number): Promise<VarianteWithRelations | null> {
