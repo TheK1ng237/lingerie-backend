@@ -63,18 +63,34 @@ export async function deleteProduct(req: Request, res: Response): Promise<void> 
     res.status(204).send();
 }
 
+function parseSizesList(sizesInput?: any, sizeInput?: any): string[] {
+    if (Array.isArray(sizesInput) && sizesInput.length > 0) {
+        return sizesInput.map((s) => String(s).trim()).filter(Boolean);
+    }
+    const rawStr = sizesInput || sizeInput;
+    if (typeof rawStr === "string" && rawStr.trim()) {
+        return rawStr.split(",").map((s) => s.trim()).filter(Boolean);
+    }
+    return ["M"];
+}
+
 export async function createVariant(req: Request, res: Response): Promise<void> {
-    const { stock, price, image, idSize, idColor, color, size } = req.body;
+    const { stock, price, image, idColor, color, sizes, size } = req.body;
 
     const finalColorId = idColor ? Number(idColor) : await getOrCreateColorId(color);
-    const finalSizeId = idSize ? Number(idSize) : await getOrCreateSizeId(size);
+    const sizeLabels = parseSizesList(sizes, size);
 
-    const data: Omit<Prisma.VarianteUncheckedCreateInput, "productId"> = {
+    const sizeConnects = await Promise.all(
+        sizeLabels.map(async (lbl) => ({ id: await getOrCreateSizeId(lbl) }))
+    );
+
+    const data: Prisma.VarianteCreateInput = {
         stock: Number(stock) || 0,
         price: Number(price) || 0,
         image: image || "/femme/image21.jpg",
-        idSize: finalSizeId,
-        idColor: finalColorId,
+        color: { connect: { id: finalColorId } },
+        sizes: { connect: sizeConnects },
+        product: { connect: { id: Number(req.params.productId) } },
     };
     res.status(201).json({ status: true, data: await productService.createVariant(Number(req.params.productId), data) });
 }
@@ -84,17 +100,22 @@ export async function getVariant(req: Request, res: Response): Promise<void> {
 }
 
 export async function updateVariant(req: Request, res: Response): Promise<void> {
-    const { stock, price, image, idSize, idColor, color, size } = req.body;
-    const payload: any = {};
+    const { stock, price, image, idColor, color, sizes, size } = req.body;
+    const payload: Prisma.VarianteUpdateInput = {};
     if (stock !== undefined) payload.stock = Number(stock);
     if (price !== undefined) payload.price = Number(price);
     if (image !== undefined) payload.image = image;
 
     if (idColor || color) {
-        payload.idColor = idColor ? Number(idColor) : await getOrCreateColorId(color);
+        const finalColorId = idColor ? Number(idColor) : await getOrCreateColorId(color);
+        payload.color = { connect: { id: finalColorId } };
     }
-    if (idSize || size) {
-        payload.idSize = idSize ? Number(idSize) : await getOrCreateSizeId(size);
+    if (sizes !== undefined || size !== undefined) {
+        const sizeLabels = parseSizesList(sizes, size);
+        const sizeConnects = await Promise.all(
+            sizeLabels.map(async (lbl) => ({ id: await getOrCreateSizeId(lbl) }))
+        );
+        payload.sizes = { set: sizeConnects };
     }
 
     res.json({ status: true, data: await productService.updateVariantById(Number(req.params.id), payload) });

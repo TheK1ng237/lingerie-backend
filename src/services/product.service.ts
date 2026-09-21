@@ -72,7 +72,7 @@ export class ProductService{
 
     async createVariant(
         productId: number,
-        data: Omit<Prisma.VarianteUncheckedCreateInput, "productId">
+        data: Prisma.VarianteCreateInput
     ): Promise<VarianteWithRelations> {
         const product = await this.productRepo.findById(productId);
 
@@ -80,7 +80,7 @@ export class ProductService{
             throw new AppError("sorry this product does not exist", 404);
         }
 
-        return this.varianteRepo.create({ ...data, productId });
+        return this.varianteRepo.create(data);
     }
 
     async getVariantById(id: number): Promise<VarianteWithRelations> {

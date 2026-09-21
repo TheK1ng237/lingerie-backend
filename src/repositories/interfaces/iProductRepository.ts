@@ -4,7 +4,7 @@ export type ProductWithVariants = Prisma.ProductGetPayload<{
     include: {
         variante: {
             include: {
-                size: true;
+                sizes: true;
                 color: true;
             };
         };

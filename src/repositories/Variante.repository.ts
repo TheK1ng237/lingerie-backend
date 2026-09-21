@@ -6,13 +6,13 @@ import {
 } from "./interfaces/IVarianteRepository.js";
 
 const varianteInclude = {
-    size: true,
+    sizes: true,
     color: true
 } satisfies Prisma.VarianteInclude;
 
 export class VarianteRepository implements IVarianteRepository {
     async create(
-        data: Prisma.VarianteUncheckedCreateInput
+        data: Prisma.VarianteCreateInput
     ): Promise<VarianteWithRelations> {
         try {
             return await prisma.variante.create({

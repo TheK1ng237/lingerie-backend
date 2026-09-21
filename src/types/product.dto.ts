@@ -5,10 +5,11 @@ export interface varianteResponseDto {
     stock: number;
     price: number;
     image: string;
-    size: {
+    sizes: {
         id: number;
         label: string;
-    };
+    }[];
+    
     color: {
         id: number;
         code: string;

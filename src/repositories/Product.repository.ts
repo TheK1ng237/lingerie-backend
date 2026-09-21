@@ -31,7 +31,7 @@ export class ProductRepository implements IProductRepository {
                 brand: true,
                 variante:{
                     include:{
-                        size:true,
+                        sizes:true,
                         color:true
                     }
                 }
@@ -54,7 +54,7 @@ export class ProductRepository implements IProductRepository {
                 brand: true,
                 variante:{
                     include:{
-                        size:true,
+                        sizes:true,
                         color:true
                     }
                 }
@@ -73,7 +73,7 @@ export class ProductRepository implements IProductRepository {
                 brand: true,
                 variante:{
                     include:{
-                        size:true,
+                        sizes:true,
                         color:true
                     }
                 }

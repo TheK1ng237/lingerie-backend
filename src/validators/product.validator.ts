@@ -25,8 +25,10 @@ export const createVariantSchema = z.object({
         stock: z.coerce.number().int().nonnegative(),
         price: z.coerce.number().nonnegative(),
         image: z.string().min(1),
-        idSize: z.coerce.number().int().positive(),
-        idColor: z.coerce.number().int().positive(),
+        idSize: z.coerce.number().int().positive().optional(),
+        idColor: z.coerce.number().int().positive().optional(),
+        size: z.string().min(1).optional(),
+        color: z.string().min(1).optional(),
     }),
 });
 
@@ -38,5 +40,7 @@ export const updateVariantSchema = z.object({
         image: z.string().min(1).optional(),
         idSize: z.coerce.number().int().positive().optional(),
         idColor: z.coerce.number().int().positive().optional(),
+        size: z.string().min(1).optional(),
+        color: z.string().min(1).optional(),
     }).strict(),
 });
