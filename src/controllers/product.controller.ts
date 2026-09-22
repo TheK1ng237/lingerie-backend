@@ -42,10 +42,21 @@ export async function getProduct(req: Request, res: Response): Promise<void> {
 }
 
 export async function createProduct(req: Request, res: Response): Promise<void> {
-    const { brandId = 1, ...product } = req.body;
+    const { brandId, ...product } = req.body;
+    const brand = brandId
+        ? await prisma.brand.findUnique({ where: { id: Number(brandId) } })
+        : await prisma.brand.findFirst({ orderBy: { id: "asc" } });
+
+    const resolvedBrand = brand ?? await prisma.brand.create({
+        data: {
+            name: "Collection Garo",
+            description: "Collection de lingerie haut de gamme et vêtements délicats",
+        },
+    });
+
     const data: Prisma.ProductCreateInput = {
         ...product,
-        brand: { connect: { id: Number(brandId) } },
+        brand: { connect: { id: resolvedBrand.id } },
     };
     res.status(201).json({ status: true, data: await productService.createProduct(data) });
 }
