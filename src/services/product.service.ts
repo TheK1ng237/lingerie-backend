@@ -47,6 +47,14 @@ export class ProductService{
         return products
     }
 
+    async getMostOrderedProducts(limit = 3): Promise<productResponseDto[]> {
+        return this.productRepo.findMostOrdered(limit);
+    }
+
+    async getMostLikedProducts(limit = 1): Promise<productResponseDto[]> {
+        return this.productRepo.findMostLiked(limit);
+    }
+
     async updateById(id:number,data:Prisma.ProductUpdateInput):Promise<productResponseDto>{
 
         const product = await this.productRepo.findById(id)

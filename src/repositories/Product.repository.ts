@@ -63,6 +63,65 @@ export class ProductRepository implements IProductRepository {
         return products
     }
 
+    async findMostOrdered(limit: number): Promise<ProductWithVariants[]> {
+        const orderedVariants = await prisma.orderDetails.groupBy({
+            by: ["varianteId"],
+            where: {
+                order: { status: { in: ["paid", "delivered"] } },
+            },
+            _sum: { quantity: true },
+            orderBy: { _sum: { quantity: "desc" } },
+        });
+
+        const variantIds = orderedVariants.map((item) => item.varianteId);
+        const variants = await prisma.variante.findMany({
+            where: { id: { in: variantIds } },
+            select: { id: true, productId: true },
+        });
+        const quantitiesByProduct = new Map<number, number>();
+        const variantToProduct = new Map(variants.map((variant) => [variant.id, variant.productId]));
+
+        for (const item of orderedVariants) {
+            const productId = variantToProduct.get(item.varianteId);
+            if (productId) {
+                quantitiesByProduct.set(productId, (quantitiesByProduct.get(productId) || 0) + (item._sum.quantity || 0));
+            }
+        }
+
+        const products = await prisma.product.findMany({
+            where: { id: { in: [...quantitiesByProduct.keys()] } },
+            include: {
+                brand: true,
+                variante: { include: { sizes: true, color: true } },
+            },
+        });
+
+        return products
+            .sort((first, second) => (quantitiesByProduct.get(second.id) || 0) - (quantitiesByProduct.get(first.id) || 0))
+            .slice(0, limit);
+    }
+
+    async findMostLiked(limit: number): Promise<ProductWithVariants[]> {
+        const likedProducts = await prisma.productLike.groupBy({
+            by: ["productId"],
+            _count: { productId: true },
+            orderBy: { _count: { productId: "desc" } },
+            take: limit,
+        });
+        const productIds = likedProducts.map((item) => item.productId);
+        if (productIds.length === 0) return [];
+
+        const products = await prisma.product.findMany({
+            where: { id: { in: productIds } },
+            include: {
+                brand: true,
+                variante: { include: { sizes: true, color: true } },
+            },
+        });
+        const positionById = new Map(productIds.map((id, index) => [id, index]));
+        return products.sort((first, second) => (positionById.get(first.id) || 0) - (positionById.get(second.id) || 0));
+    }
+
     async updateById(id:number,data:Prisma.ProductUpdateInput):Promise<ProductWithVariants>{
         const product= await prisma.product.update({
             where:{

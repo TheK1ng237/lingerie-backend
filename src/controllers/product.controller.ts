@@ -37,6 +37,18 @@ export async function getProducts(_req: Request, res: Response): Promise<void> {
     res.json({ status: true, data: await productService.getAllProduct() });
 }
 
+export async function getMostOrderedProducts(req: Request, res: Response): Promise<void> {
+    const requestedLimit = Number(req.query.limit);
+    const limit = Number.isInteger(requestedLimit) && requestedLimit > 0 && requestedLimit <= 12 ? requestedLimit : 3;
+    res.json({ status: true, data: await productService.getMostOrderedProducts(limit) });
+}
+
+export async function getMostLikedProducts(req: Request, res: Response): Promise<void> {
+    const requestedLimit = Number(req.query.limit);
+    const limit = Number.isInteger(requestedLimit) && requestedLimit > 0 && requestedLimit <= 12 ? requestedLimit : 1;
+    res.json({ status: true, data: await productService.getMostLikedProducts(limit) });
+}
+
 export async function getProduct(req: Request, res: Response): Promise<void> {
     res.json({ status: true, data: await productService.getProductById(Number(req.params.id)) });
 }

@@ -19,6 +19,8 @@ const router = Router();
  *         description: Liste des produits avec leurs variantes
  */
 router.get("/", asyncHandler(productController.getProducts));
+router.get("/most-ordered", asyncHandler(productController.getMostOrderedProducts));
+router.get("/most-liked", asyncHandler(productController.getMostLikedProducts));
 
 /**
  * @openapi

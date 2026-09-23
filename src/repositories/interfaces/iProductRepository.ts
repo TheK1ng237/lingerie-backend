@@ -15,6 +15,8 @@ export interface IProductRepository {
     create(data:Prisma.ProductCreateInput):Promise<Product>;
     findById(id:number):Promise<ProductWithVariants | null>;
     findAll():Promise<ProductWithVariants[]>;
+    findMostOrdered(limit: number):Promise<ProductWithVariants[]>;
+    findMostLiked(limit: number):Promise<ProductWithVariants[]>;
     findByName(name:string):Promise<Product | null>;
     updateById(id:number,data:Prisma.ProductUpdateInput):Promise<ProductWithVariants>;
     delete(id:number):Promise<void>;
