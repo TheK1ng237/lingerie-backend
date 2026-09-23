@@ -17,6 +17,7 @@ import authRoutes from './routes/auth.routes.js';
 import productRoutes from './routes/product.routes.js';
 import orderRoutes from './routes/order.routes.js';
 import uploadRoutes from './routes/upload.routes.js';
+import testimonialRoutes from './routes/testimonial.routes.js';
 import { swaggerSpec } from './docs/swagger.js';
  
 const app: Application = express();
@@ -46,6 +47,7 @@ app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/products', productRoutes);
 app.use('/api/v1/orders', orderRoutes);
 app.use('/api/v1/upload', uploadRoutes);
+app.use('/api/v1/testimonials', testimonialRoutes);
  
 app.use(notFound);
 app.use(errorHandler);

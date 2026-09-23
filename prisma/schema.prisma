@@ -63,6 +63,17 @@ model User{
     likes        ProductLike[]
 }
 
+model Testimonial {
+    id         Int      @id @default(autoincrement())
+    authorName String
+    authorRole String?
+    content    String
+    rating     Int      @default(5)
+    isPublished Boolean @default(false)
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+}
+
 model RefreshToken{
     id        Int @id @default(autoincrement())
     token     String @unique
