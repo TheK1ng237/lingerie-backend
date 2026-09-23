@@ -1,6 +1,8 @@
 import { Prisma } from "@prisma/client";
 import { Request, Response } from "express";
 import orderService from "../services/order.service.js";
+import { prisma } from "../config/database.js";
+import { AppError } from "../utils/AppError.js";
 
 export async function getOrders(_req: Request, res: Response): Promise<void> {
     res.json({ status: true, data: await orderService.getAllOrder() });
@@ -16,12 +18,52 @@ export async function getOrder(req: Request, res: Response): Promise<void> {
 
 export async function createOrder(req: Request, res: Response): Promise<void> {
     const { totalPrice, orderDetails } = req.body;
+    const variantIds = orderDetails.map((detail: { varianteId: number }) => Number(detail.varianteId));
+    const existingVariants = await prisma.variante.findMany({
+        where: { id: { in: variantIds } },
+        select: { id: true },
+    });
+    const existingVariantIds = new Set(existingVariants.map((variant) => variant.id));
+    const missingVariantId = variantIds.find((id: number) => !existingVariantIds.has(id));
+
+    if (missingVariantId !== undefined) {
+        throw new AppError(`La variante ${missingVariantId} n'existe plus.`, 400);
+    }
+
+    const quantitiesByVariant = new Map<number, number>();
+    for (const detail of orderDetails) {
+        const variantId = Number(detail.varianteId);
+        quantitiesByVariant.set(
+            variantId,
+            (quantitiesByVariant.get(variantId) || 0) + Number(detail.quantity)
+        );
+    }
+
     const data: Prisma.OrderCreateInput = {
         totalPrice: Number(totalPrice),
         user: { connect: { id: req.user!.id } },
         orderDetails: { create: orderDetails },
     };
-    res.status(201).json({ status: true, data: await orderService.createOrder(data) });
+
+    const order = await prisma.$transaction(async (transaction) => {
+        for (const [variantId, quantity] of quantitiesByVariant) {
+            const updated = await transaction.variante.updateMany({
+                where: { id: variantId, stock: { gte: quantity } },
+                data: { stock: { decrement: quantity } },
+            });
+
+            if (updated.count !== 1) {
+                throw new AppError(`Stock insuffisant pour la variante ${variantId}.`, 409);
+            }
+        }
+
+        return transaction.order.create({
+            data,
+            include: { orderDetails: true },
+        });
+    });
+
+    res.status(201).json({ status: true, data: order });
 }
 
 export async function updateOrder(req: Request, res: Response): Promise<void> {
