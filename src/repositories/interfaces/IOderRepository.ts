@@ -2,7 +2,14 @@ import { Order,Prisma } from "@prisma/client";
 
 export type OrderWithDetails = Prisma.OrderGetPayload<{
     include: {
-        orderDetails: true;
+        user: true;
+        orderDetails: {
+            include: {
+                variante: {
+                    include: { product: true };
+                };
+            };
+        };
     };
 }>;
 

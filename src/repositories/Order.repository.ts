@@ -9,7 +9,8 @@ export class OrderRepository implements IOrderRepository {
         const order= await prisma.order.create({
             data:data,
             include:{
-                orderDetails:true
+                user: true,
+                orderDetails:{ include: { variante: { include: { product: true } } } }
             }
         })
         return order
@@ -19,7 +20,8 @@ export class OrderRepository implements IOrderRepository {
         const order= await prisma.order.findUnique({
             where:{id},
             include:{
-                orderDetails:true
+                user: true,
+                orderDetails:{ include: { variante: { include: { product: true } } } }
             }
         })
         return order
@@ -28,7 +30,8 @@ export class OrderRepository implements IOrderRepository {
         const orders = await prisma.order.findMany({
             where:{ idUser },
             include:{
-                orderDetails:true
+                user: true,
+                orderDetails:{ include: { variante: { include: { product: true } } } }
             }
         })
 
@@ -38,7 +41,8 @@ export class OrderRepository implements IOrderRepository {
     async findAll():Promise<OrderWithDetails[]>{
         const orders= await prisma.order.findMany({
             include:{
-                orderDetails:true
+                user: true,
+                orderDetails:{ include: { variante: { include: { product: true } } } }
             }
         })
         return orders
@@ -51,7 +55,8 @@ export class OrderRepository implements IOrderRepository {
             },
             data:data,
             include:{
-                orderDetails:true
+                user: true,
+                orderDetails:{ include: { variante: { include: { product: true } } } }
             }
         })
         return order
