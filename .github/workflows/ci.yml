@@ -106,11 +106,13 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_BACKEND_PROD }}
 
-      - name: Validate production database URL
+      - name: Validate pulled database URL
         run: |
-          DATABASE_URL_VALUE="$(grep '^DATABASE_URL=' .env.production.local | head -n 1 | cut -d '=' -f 2- | sed -e 's/^"//' -e 's/"$//')"
+          ENV_FILE=".vercel/.env.production.local"
+          test -f "$ENV_FILE" || { echo "Vercel production environment file was not pulled: $ENV_FILE"; exit 1; }
+          DATABASE_URL_VALUE="$(grep '^DATABASE_URL=' "$ENV_FILE" | head -n 1 | cut -d '=' -f 2- | sed -e 's/^"//' -e 's/"$//')"
           [[ "$DATABASE_URL_VALUE" == postgresql://* || "$DATABASE_URL_VALUE" == postgres://* ]] || {
-            echo "Invalid Vercel DATABASE_URL: it must start with postgresql:// or postgres://."
+            echo "Invalid Vercel DATABASE_URL: configure a PostgreSQL URL in Vercel Production variables."
             exit 1
           }
 
