@@ -1,6 +1,9 @@
 {
   "name": "lingerie-backend",
   "version": "1.0.0",
+  "engines": {
+    "node": ">=22"
+  },
   "description": "backen of lingerie app",
   "author": "thek1ng237",
   "type": "module",
