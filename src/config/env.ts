@@ -24,6 +24,9 @@ const envScema = z.object({
     WHATSAPP_GRAPH_VERSION: z.string().default("v25.0"),
     WHATSAPP_ORDER_TEMPLATE: z.string().min(1).default("order_admin_notification"),
     WHATSAPP_TEMPLATE_LANGUAGE: z.string().min(2).default("fr"),
+    RESEND_API_KEY: z.string().min(1).optional(),
+    NEWSLETTER_FROM_EMAIL: z.string().email().optional(),
+    NEWSLETTER_SITE_URL: z.string().url().default("http://localhost:3000"),
     
 })
 
