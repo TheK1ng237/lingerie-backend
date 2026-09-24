@@ -120,6 +120,8 @@ jobs:
             echo "Empty Vercel DATABASE_URL: set a PostgreSQL URL in Production environment variables."
             exit 1
           }
+          DATABASE_URL_SCHEME="${DATABASE_URL_VALUE%%:*}"
+          echo "Vercel DATABASE_URL scheme: ${DATABASE_URL_SCHEME:-missing}"
           [[ "$DATABASE_URL_VALUE" == postgresql://* || "$DATABASE_URL_VALUE" == postgres://* ]] || {
             echo "Invalid Vercel DATABASE_URL: the Production value must start with postgres:// or postgresql://."
             exit 1
