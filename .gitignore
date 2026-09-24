@@ -29,6 +29,7 @@ uploads/
 # IDE and operating system files
 .vscode/
 .idea/
+.vercel/
 .DS_Store
 Thumbs.db
 
