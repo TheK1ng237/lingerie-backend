@@ -129,19 +129,17 @@ Ne lance pas `prisma migrate dev` contre la base de production.
 
 ## GitHub Actions
 
-Le workflow `.github/workflows/ci.yml` valide Prisma, les types, les tests et le build. Il déploie aussi automatiquement :
+Le workflow `.github/workflows/ci.yml` valide Prisma, les types, les tests et le build sur chaque pull request et chaque push vers `main`. Après validation, un push vers `main` déploie automatiquement le backend sur Vercel Production.
 
-- `dev` vers l'environnement Vercel de preview/development ;
-- `main` vers l'environnement Vercel de production.
-
-Secrets GitHub requis :
+Ajoute ces secrets dans **Settings > Secrets and variables > Actions** du dépôt :
 
 - `VERCEL_TOKEN`
 - `VERCEL_ORG_ID`
-- `VERCEL_PROJECT_ID_BACKEND_DEV`
 - `VERCEL_PROJECT_ID_BACKEND_PROD`
 
-Les secrets doivent être ajoutés dans **Settings > Secrets and variables > Actions**. Les variables applicatives restent dans les **Environment Variables** Vercel et ne doivent pas être écrites dans le workflow.
+Crée également un environnement GitHub nommé `production` si tu veux lui associer des règles d'approbation ou des secrets dédiés. Les variables applicatives restent dans les **Environment Variables** Vercel et ne doivent pas être écrites dans le workflow.
+
+Dans le projet Vercel ciblé par `VERCEL_PROJECT_ID_BACKEND_PROD`, configure au minimum `DATABASE_URL` dans l'environnement **Production**. Sa valeur doit être une URL PostgreSQL complète commençant par `postgres://` ou `postgresql://`. Le workflow exécute `vercel pull` avant le build et arrête le déploiement si cette variable est absente, vide ou d'un autre format.
 
 ## Sécurité
 
