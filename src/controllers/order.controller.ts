@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import orderService from "../services/order.service.js";
 import { prisma } from "../config/database.js";
 import { AppError } from "../utils/AppError.js";
+import { notifyAdminOfOrder } from "../services/whatsapp.service.js";
 
 export async function getOrders(_req: Request, res: Response): Promise<void> {
     res.json({ status: true, data: await orderService.getAllOrder() });
@@ -61,6 +62,17 @@ export async function createOrder(req: Request, res: Response): Promise<void> {
             data,
             include: { orderDetails: true },
         });
+    });
+
+    const customer = await prisma.user.findUnique({
+        where: { id: req.user!.id },
+        select: { firstName: true, lastName: true },
+    });
+    void notifyAdminOfOrder({
+        orderId: order.id,
+        customerName: `${customer?.firstName || "Client"} ${customer?.lastName || ""}`.trim(),
+        totalPrice: Number(totalPrice),
+        itemCount: orderDetails.reduce((total: number, detail: { quantity: number }) => total + Number(detail.quantity), 0),
     });
 
     res.status(201).json({ status: true, data: order });

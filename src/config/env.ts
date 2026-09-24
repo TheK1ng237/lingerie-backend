@@ -18,6 +18,12 @@ const envScema = z.object({
     SUPABASE_STORAGE_BUCKET: z.string().min(1).default("product-images"),
     RATE_LIMIT_WINDOW_MS: z.coerce.number().default(15 * 60 * 1000),
     RATE_LIMIT_MAX: z.coerce.number().default(100),
+    WHATSAPP_ACCESS_TOKEN: z.string().min(1).optional(),
+    WHATSAPP_PHONE_NUMBER_ID: z.string().min(1).optional(),
+    WHATSAPP_ADMIN_PHONE: z.string().min(8).optional(),
+    WHATSAPP_GRAPH_VERSION: z.string().default("v25.0"),
+    WHATSAPP_ORDER_TEMPLATE: z.string().min(1).default("order_admin_notification"),
+    WHATSAPP_TEMPLATE_LANGUAGE: z.string().min(2).default("fr"),
     
 })
 
