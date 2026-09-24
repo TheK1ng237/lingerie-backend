@@ -4,7 +4,7 @@ API Express + TypeScript pour la boutique Lingerie. Le backend utilise PostgreSQ
 
 ## Stack
 
-- Node.js 20+
+- Node.js 22+
 - Express 5
 - TypeScript
 - PostgreSQL
@@ -15,7 +15,7 @@ API Express + TypeScript pour la boutique Lingerie. Le backend utilise PostgreSQ
 
 ## Prérequis
 
-- Node.js 20 ou supérieur
+- Node.js 22 ou supérieur
 - npm
 - Une base PostgreSQL
 - Les variables d'environnement du fichier `.env.example`
