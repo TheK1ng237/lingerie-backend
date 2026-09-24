@@ -3,6 +3,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import * as authController from "../controllers/auth.controller.js";
 import { validate } from "../middlewares/validate.middleware.js";
 import { loginSchema, refreshTokenSchema, registerSchema } from "../validators/auth.validator.js";
+import { authLimiter } from "../middlewares/rateLimiter.middleware.js";
 
 const router = Router();
 /**
@@ -20,7 +21,7 @@ const router = Router();
  *       201: { description: Utilisateur créé }
  *       409: { description: Adresse email déjà utilisée }
  */
-router.post("/register", validate(registerSchema), asyncHandler(authController.register));
+router.post("/register", authLimiter, validate(registerSchema), asyncHandler(authController.register));
 
 /**
  * @openapi
@@ -37,7 +38,7 @@ router.post("/register", validate(registerSchema), asyncHandler(authController.r
  *       200: { description: Tokens générés }
  *       401: { description: Identifiants invalides }
  */
-router.post("/login", validate(loginSchema), asyncHandler(authController.login));
+router.post("/login", authLimiter, validate(loginSchema), asyncHandler(authController.login));
 
 /**
  * @openapi
