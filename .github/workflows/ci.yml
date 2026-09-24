@@ -110,7 +110,7 @@ jobs:
         run: |
           ENV_FILE=".vercel/.env.production.local"
           test -f "$ENV_FILE" || { echo "Vercel production environment file was not pulled: $ENV_FILE"; exit 1; }
-          DATABASE_URL_VALUE="$(grep '^DATABASE_URL=' "$ENV_FILE" | head -n 1 | cut -d '=' -f 2- | sed -e 's/^"//' -e 's/"$//')"
+          DATABASE_URL_VALUE="$(grep '^DATABASE_URL=' "$ENV_FILE" | head -n 1 | cut -d '=' -f 2- | sed -e "s/^[\"']//" -e "s/[\"']$//")"
           [[ "$DATABASE_URL_VALUE" == postgresql://* || "$DATABASE_URL_VALUE" == postgres://* ]] || {
             echo "Invalid Vercel DATABASE_URL: configure a PostgreSQL URL in Vercel Production variables."
             exit 1
