@@ -48,7 +48,6 @@ Healthcheck : `http://localhost:4000/health`
 | `npm run db:migrate` | Crée/applique une migration en local |
 | `npm run db:push` | Synchronise le schéma sans migration, réservé au local |
 | `npm run db:studio` | Ouvre Prisma Studio |
-| `npm run render-build` | Applique les migrations de production puis compile |
 
 ## API
 
@@ -98,20 +97,22 @@ Variables Supabase :
 
 Les variables WhatsApp sont optionnelles pour les notifications administrateur.
 
-## Déploiement Render
+## Déploiement Vercel
 
-Le fichier `render.yaml` décrit un service web Node.js avec migrations Prisma, build TypeScript et healthcheck. Dans Render, crée un **Blueprint** depuis le dépôt ou configure manuellement :
+Le fichier `vercel.json` expose `api/index.ts` comme fonction Node.js 22 et redirige toutes les requêtes vers l'application Express. Dans Vercel :
 
 - **Root Directory** : `lingerie-backend` si le dépôt contient aussi le frontend
-- **Build Command** : `npm ci && npm run render-build`
-- **Start Command** : `npm start`
-- **Health Check Path** : `/health`
+- **Framework Preset** : `Other`
+- **Build Command** : laisser la valeur définie dans `vercel.json`
+- **Output Directory** : laisser vide
 
-Renseigne les variables marquées `sync: false` dans Render. Render fournit automatiquement `PORT`; l'application écoute sur `0.0.0.0`. `DATABASE_URL` doit pointer vers PostgreSQL de production. Les migrations sont appliquées pendant le build avec `prisma migrate deploy`.
+Ajoute dans les variables d'environnement Vercel `DATABASE_URL`, `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET`, `CORS_ORIGIN` et les variables optionnelles utilisées par Supabase, WhatsApp et Resend. `DATABASE_URL` doit être accessible pendant le build, car `prisma migrate deploy` est exécuté avant la compilation.
+
+Après déploiement, vérifie `https://<domaine-vercel>/health`. Les routes métier restent disponibles sous `/api/v1`.
 
 ## Migrations en production
 
-Les migrations sont appliquées automatiquement par `render-build`. Utilise toujours une URL PostgreSQL de production dans `DATABASE_URL` et vérifie les migrations en local avant de pousser :
+Les migrations sont appliquées automatiquement par le build Vercel. Utilise toujours une URL PostgreSQL de production dans `DATABASE_URL` et vérifie les migrations en local avant de pousser :
 
 ```bash
 npx prisma migrate status
@@ -123,7 +124,7 @@ Ne lance pas `prisma migrate dev` contre la base de production.
 
 ## GitHub Actions
 
-Le workflow `.github/workflows/ci.yml` valide Prisma, les types, les tests et le build sur chaque pull request et chaque push vers `main`. Render prend en charge le déploiement depuis le dépôt.
+Le workflow `.github/workflows/ci.yml` valide Prisma, les types, les tests et le build sur chaque pull request et chaque push vers `main`.
 
 ## Sécurité
 
