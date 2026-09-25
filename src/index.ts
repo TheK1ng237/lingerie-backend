@@ -5,6 +5,10 @@ import { logger } from './config/logger.js';
  
 async function startServer() {
   await connectDB();
+
+  const cors= env.CORS_ORIGIN.split(',').map((origin) => origin.trim());
+
+  logger.info(`✅ ✅ ✅ ✅ ✅ ✅ CORS autorisé pour les origines : ${cors.join(', ')}`);
  
   const server = app.listen(env.PORT, () => {
     logger.info(`🚀 Serveur démarré sur http://localhost:${env.PORT}`);
