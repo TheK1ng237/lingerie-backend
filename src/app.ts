@@ -22,6 +22,8 @@ import newsletterRoutes from './routes/newsletter.routes.js';
 import { swaggerSpec } from './docs/swagger.js';
  
 const app: Application = express();
+
+logger.info({ nodeEnv: env.NODE_ENV }, 'Configuration backend chargée');
  
 app.set('trust proxy', 1);
  
