@@ -11,7 +11,6 @@ API Express + TypeScript pour la boutique Lingerie. Le backend utilise PostgreSQ
 - Prisma
 - Supabase Storage
 - Resend
-- Vercel Functions
 
 ## Prérequis
 
@@ -49,7 +48,7 @@ Healthcheck : `http://localhost:4000/health`
 | `npm run db:migrate` | Crée/applique une migration en local |
 | `npm run db:push` | Synchronise le schéma sans migration, réservé au local |
 | `npm run db:studio` | Ouvre Prisma Studio |
-| `npm run vercel-build` | Applique les migrations de production puis compile |
+| `npm run render-build` | Applique les migrations de production puis compile |
 
 ## API
 
@@ -110,25 +109,9 @@ Le fichier `render.yaml` décrit un service web Node.js avec migrations Prisma, 
 
 Renseigne les variables marquées `sync: false` dans Render. Render fournit automatiquement `PORT`; l'application écoute sur `0.0.0.0`. `DATABASE_URL` doit pointer vers PostgreSQL de production. Les migrations sont appliquées pendant le build avec `prisma migrate deploy`.
 
-## Déploiement Vercel
+## Migrations en production
 
-Le fichier `vercel.json` expose l'application Express via `api/[...path].ts`. Les endpoints restent donc accessibles sous :
-
-```text
-https://<backend-domain>.vercel.app/api/v1/...
-```
-
-### Configuration du projet Vercel
-
-1. Crée un projet Vercel relié au dépôt.
-2. Configure le **Root Directory** sur `lingerie-backend` si le dépôt contient aussi le frontend.
-3. Ajoute les variables d'environnement dans Vercel pour `Development`, `Preview` et `Production` selon le besoin.
-4. Configure au minimum `DATABASE_URL`, les secrets JWT, `CORS_ORIGIN`, les variables Supabase et les variables Resend.
-5. Déploie. Vercel exécute `npm run vercel-build`, qui lance `prisma migrate deploy` puis le build TypeScript.
-
-### Migrations en production
-
-Les migrations sont appliquées automatiquement par `vercel-build`. Utilise toujours une URL PostgreSQL de production dans `DATABASE_URL` et vérifie les migrations en local avant de pousser :
+Les migrations sont appliquées automatiquement par `render-build`. Utilise toujours une URL PostgreSQL de production dans `DATABASE_URL` et vérifie les migrations en local avant de pousser :
 
 ```bash
 npx prisma migrate status
@@ -140,17 +123,7 @@ Ne lance pas `prisma migrate dev` contre la base de production.
 
 ## GitHub Actions
 
-Le workflow `.github/workflows/ci.yml` valide Prisma, les types, les tests et le build sur chaque pull request et chaque push vers `main`. Après validation, un push vers `main` déploie automatiquement le backend sur Vercel Production.
-
-Ajoute ces secrets dans **Settings > Secrets and variables > Actions** du dépôt :
-
-- `VERCEL_TOKEN`
-- `VERCEL_ORG_ID`
-- `VERCEL_PROJECT_ID_BACKEND_PROD`
-
-Crée également un environnement GitHub nommé `production` si tu veux lui associer des règles d'approbation ou des secrets dédiés. Les variables applicatives restent dans les **Environment Variables** Vercel et ne doivent pas être écrites dans le workflow.
-
-Dans le projet Vercel ciblé par `VERCEL_PROJECT_ID_BACKEND_PROD`, configure au minimum `DATABASE_URL` dans l'environnement **Production**. Sa valeur doit être une URL PostgreSQL complète commençant par `postgres://` ou `postgresql://`. Le workflow exécute `vercel pull` avant le build et arrête le déploiement si cette variable est absente, vide ou d'un autre format.
+Le workflow `.github/workflows/ci.yml` valide Prisma, les types, les tests et le build sur chaque pull request et chaque push vers `main`. Render prend en charge le déploiement depuis le dépôt.
 
 ## Sécurité
 

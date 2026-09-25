@@ -1,0 +1,11 @@
+{
+  "remoteName": "origin",
+  "projects": [
+    {
+      "id": "prj_ZvVXPyGfk6niutS5SxOrLnUv2mft",
+      "name": "lingerie-backend",
+      "directory": ".",
+      "orgId": "team_7hdoXhUi8KYP0kSRP9hkjSHF"
+    }
+  ]
+}

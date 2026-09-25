@@ -29,12 +29,10 @@ uploads/
 # IDE and operating system files
 .vscode/
 .idea/
-.vercel/
 .DS_Store
 Thumbs.db
 
 # Seed scripts contain local/bootstrap credentials and must stay out of Git.
 **/seed.ts
 **/seed.prod.ts
-.vercel
 .env*

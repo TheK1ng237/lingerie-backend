@@ -11,7 +11,6 @@
   "scripts": {
     "dev": "tsx watch  src/index.ts",
     "build": "tsc",
-    "vercel-build": "prisma migrate deploy && npm run build",
     "render-build": "prisma migrate deploy && npm run build",
     "start": "node dist/index.js",
     "typecheck": "tsc --noEmit",
