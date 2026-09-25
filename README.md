@@ -99,6 +99,17 @@ Variables Supabase :
 
 Les variables WhatsApp sont optionnelles pour les notifications administrateur.
 
+## Déploiement Render
+
+Le fichier `render.yaml` décrit un service web Node.js avec migrations Prisma, build TypeScript et healthcheck. Dans Render, crée un **Blueprint** depuis le dépôt ou configure manuellement :
+
+- **Root Directory** : `lingerie-backend` si le dépôt contient aussi le frontend
+- **Build Command** : `npm ci && npm run render-build`
+- **Start Command** : `npm start`
+- **Health Check Path** : `/health`
+
+Renseigne les variables marquées `sync: false` dans Render. Render fournit automatiquement `PORT`; l'application écoute sur `0.0.0.0`. `DATABASE_URL` doit pointer vers PostgreSQL de production. Les migrations sont appliquées pendant le build avec `prisma migrate deploy`.
+
 ## Déploiement Vercel
 
 Le fichier `vercel.json` expose l'application Express via `api/[...path].ts`. Les endpoints restent donc accessibles sous :

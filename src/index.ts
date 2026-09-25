@@ -10,9 +10,9 @@ async function startServer() {
 
   logger.info(`✅ ✅ ✅ ✅ ✅ ✅ CORS autorisé pour les origines : ${cors.join(', ')}`);
  
-  const server = app.listen(env.PORT, () => {
-    logger.info(`🚀 Serveur démarré sur http://localhost:${env.PORT}`);
-    logger.info(`📚 Swagger disponible sur http://localhost:${env.PORT}/api-docs`);
+  const server = app.listen(env.PORT, '0.0.0.0', () => {
+    logger.info(`🚀 Serveur démarré sur le port ${env.PORT}`);
+    logger.info(`📚 Swagger disponible sur /api-docs`);
   });
  
   const shutdown = async (signal: string) => {

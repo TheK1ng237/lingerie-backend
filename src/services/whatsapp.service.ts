@@ -49,7 +49,16 @@ export async function notifyAdminOfOrder(order: OrderNotification): Promise<void
 
         if (!response.ok) {
             const details = await response.text();
-            logger.error({ status: response.status, details }, "WhatsApp notification failed");
+            logger.error(
+                {
+                    status: response.status,
+                    details,
+                    phoneNumberId: WHATSAPP_PHONE_NUMBER_ID,
+                    templateName: env.WHATSAPP_ORDER_TEMPLATE,
+                    templateLanguage: env.WHATSAPP_TEMPLATE_LANGUAGE,
+                },
+                "WhatsApp notification failed"
+            );
             return;
         }
 
