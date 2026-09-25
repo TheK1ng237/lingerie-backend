@@ -7,7 +7,7 @@
   "description": "backen of lingerie app",
   "author": "thek1ng237",
   "type": "module",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "dev": "tsx watch  src/index.ts",
     "build": "tsc",
