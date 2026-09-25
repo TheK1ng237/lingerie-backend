@@ -9,7 +9,7 @@ async function startServer() {
   const cors= env.CORS_ORIGIN.split(',').map((origin) => origin.trim());
 
   logger.info(`✅ ✅ ✅ ✅ ✅ ✅ CORS autorisé pour les origines : ${cors.join(', ')}`);
- 
+    
   const server = app.listen(env.PORT, '0.0.0.0', () => {
     logger.info(`🚀 Serveur démarré sur le port ${env.PORT}`);
     logger.info(`📚 Swagger disponible sur /api-docs`);

@@ -1,11 +1,6 @@
 {
   "version": 2,
   "buildCommand": "npx prisma generate && npx prisma migrate deploy && npm run build",
-  "functions": {
-    "api/index.ts": {
-      "runtime": "nodejs22.x"
-    }
-  },
   "rewrites": [
     {
       "source": "/(.*)",
